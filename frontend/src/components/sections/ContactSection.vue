@@ -1,7 +1,56 @@
 <script setup lang="ts">
-import { PhPaperPlaneTilt, PhXLogo } from '@phosphor-icons/vue';
+import { ref, computed } from 'vue';
+import { PhPaperPlaneTilt, PhXLogo, PhClipboard, PhCheck } from '@phosphor-icons/vue';
+import { contactConfig } from '@/data/contact';
 
-const email = 'contact@amano-amane.com'; // TODO: Update with actual email
+type CopyState = 'idle' | 'success' | 'error';
+const copyState = ref<CopyState>('idle');
+
+const mailtoUrl = computed(() => {
+  return `mailto:${contactConfig.email}`;
+});
+
+const copyEmail = async () => {
+  try {
+    await navigator.clipboard.writeText(contactConfig.email);
+    copyState.value = 'success';
+    setTimeout(() => {
+      copyState.value = 'idle';
+    }, 2000);
+  } catch {
+    // Fallback for older browsers
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = contactConfig.email;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      copyState.value = 'success';
+      setTimeout(() => {
+        copyState.value = 'idle';
+      }, 2000);
+    } catch {
+      copyState.value = 'error';
+      setTimeout(() => {
+        copyState.value = 'idle';
+      }, 2000);
+    }
+  }
+};
+
+const copyButtonText = computed(() => {
+  switch (copyState.value) {
+    case 'success':
+      return 'コピーしました！';
+    case 'error':
+      return 'コピーできませんでした';
+    default:
+      return 'メールアドレスをコピー';
+  }
+});
 </script>
 
 <template>
@@ -24,20 +73,45 @@ const email = 'contact@amano-amane.com'; // TODO: Update with actual email
             返信にお時間をいただく場合があります。
           </p>
 
-          <a :href="`mailto:${email}`" class="contact__button">
+          <a :href="mailtoUrl" class="contact__button contact__button--primary">
             <span class="contact__button-text">メールを送る</span>
             <span class="contact__button-arrow">→</span>
           </a>
+
+          <button
+            type="button"
+            class="contact__button contact__button--secondary"
+            :class="{
+              'contact__button--success': copyState === 'success',
+              'contact__button--error': copyState === 'error',
+            }"
+            :aria-label="copyButtonText"
+            @click="copyEmail"
+          >
+            <PhCheck v-if="copyState === 'success'" class="contact__button-icon" weight="bold" />
+            <PhClipboard v-else class="contact__button-icon" weight="regular" />
+            <span class="contact__button-text">{{ copyButtonText }}</span>
+          </button>
 
           <div class="contact__divider">
             <span>or</span>
           </div>
 
           <p class="contact__alternative">
-            <a href="https://x.com/" target="_blank" rel="noopener noreferrer" class="contact__link">
+            <a
+              v-if="contactConfig.twitterUrl"
+              :href="contactConfig.twitterUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact__link"
+            >
               <PhXLogo class="contact__link-icon" weight="bold" />
-              <span>Twitter/X の DM</span>
+              <span>の DM</span>
             </a>
+            <span v-else class="contact__link contact__link--disabled">
+              <PhXLogo class="contact__link-icon" weight="bold" />
+              <span>の DM</span>
+            </span>
             でも受け付けています
           </p>
         </div>
@@ -104,6 +178,7 @@ const email = 'contact@amano-amane.com'; // TODO: Update with actual email
 
   &__card {
     max-width: 480px;
+    width: 100%;
     padding: $spacing-2xl;
     background: rgba($color-soft-white, 0.05);
     backdrop-filter: blur(10px);
@@ -138,28 +213,71 @@ const email = 'contact@amano-amane.com'; // TODO: Update with actual email
     gap: $spacing-sm;
     width: 100%;
     padding: $spacing-md $spacing-xl;
-    background: linear-gradient(135deg, $color-mem-pink, $color-neon-purple);
-    color: white;
     font-family: $font-heading;
     font-size: $font-size-body;
     font-weight: $font-weight-medium;
     text-decoration: none;
     border-radius: $radius-md;
     transition: all $transition-base;
-    box-shadow: 0 4px 20px rgba($color-mem-pink, 0.3);
+    cursor: pointer;
 
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 30px rgba($color-mem-pink, 0.4);
+    &--primary {
+      background: linear-gradient(135deg, $color-mem-pink, $color-neon-purple);
       color: white;
+      border: none;
+      box-shadow: 0 4px 20px rgba($color-mem-pink, 0.3);
 
-      .contact__button-arrow {
-        transform: translateX(4px);
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 30px rgba($color-mem-pink, 0.4);
+        color: white;
+
+        .contact__button-arrow {
+          transform: translateX(4px);
+        }
+      }
+    }
+
+    &--secondary {
+      background: transparent;
+      color: rgba($color-soft-white, 0.8);
+      border: 1px solid rgba($color-soft-white, 0.2);
+      margin-top: $spacing-md;
+
+      &:hover {
+        border-color: rgba($color-soft-white, 0.4);
+        color: $color-soft-white;
+      }
+    }
+
+    &--success {
+      border-color: $color-glitch-green;
+      color: $color-glitch-green;
+
+      &:hover {
+        border-color: $color-glitch-green;
+        color: $color-glitch-green;
+      }
+    }
+
+    &--error {
+      border-color: $color-mem-pink;
+      color: $color-mem-pink;
+
+      &:hover {
+        border-color: $color-mem-pink;
+        color: $color-mem-pink;
       }
     }
 
     &-arrow {
       transition: transform $transition-fast;
+    }
+
+    &-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
     }
   }
 
@@ -183,25 +301,37 @@ const email = 'contact@amano-amane.com'; // TODO: Update with actual email
   &__alternative {
     color: rgba($color-soft-white, 0.7);
     font-size: $font-size-body;
+    line-height: 1.5;
     margin: 0;
   }
 
   &__link {
-    display: inline-flex;
-    align-items: center;
-    gap: $spacing-xs;
+    display: inline;
     color: $color-electric-cyan;
     text-decoration: none;
     transition: color $transition-fast;
+
+    &-icon {
+      display: inline;
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.1em;
+      margin-right: $spacing-xs;
+    }
 
     &:hover {
       color: $color-mem-pink;
     }
 
-    &-icon {
-      width: 18px;
-      height: 18px;
+    &--disabled {
+      color: $color-medium;
+      cursor: not-allowed;
+
+      &:hover {
+        color: $color-medium;
+      }
     }
+
   }
 }
 </style>

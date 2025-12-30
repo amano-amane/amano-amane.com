@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { SocialLink } from '@/types';
+import { PhXLogo, PhGithubLogo, PhLink } from '@phosphor-icons/vue';
 
 defineProps<{
   link: SocialLink;
 }>();
 
-const iconMap: Record<string, string> = {
-  twitter: '𝕏',
-  github: '⌘',
+const iconComponents = {
+  twitter: PhXLogo,
+  github: PhGithubLogo,
+  default: PhLink,
 };
 </script>
 
@@ -19,7 +21,13 @@ const iconMap: Record<string, string> = {
     class="link-button"
     :class="{ 'link-button--disabled': !link.isActive }"
   >
-    <span class="link-button__icon">{{ iconMap[link.icon] || '🔗' }}</span>
+    <span class="link-button__icon">
+      <component
+        :is="iconComponents[link.icon as keyof typeof iconComponents] || iconComponents.default"
+        weight="bold"
+        :size="28"
+      />
+    </span>
     <span class="link-button__name">{{ link.name }}</span>
     <span v-if="!link.isActive" class="link-button__badge">準備中</span>
   </a>
@@ -62,8 +70,6 @@ const iconMap: Record<string, string> = {
     background: $color-cyber-navy;
     color: $color-soft-white;
     border-radius: $radius-md;
-    font-size: 24px;
-    font-weight: $font-weight-bold;
   }
 
   &__name {

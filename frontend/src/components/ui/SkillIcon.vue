@@ -1,35 +1,40 @@
 <script setup lang="ts">
 import type { Skill } from '@/types';
-import type { Component } from 'vue';
-import {
-  PhGameController,
-  PhLightbulb,
-  PhPencilSimple,
-  PhCloud,
-  PhCode,
-  PhShieldCheck,
-} from '@phosphor-icons/vue';
+import { PhLightbulb, PhShieldCheck, PhCode, PhPaperclip } from '@phosphor-icons/vue';
+
+// Brand SVG icons
+import godotIcon from '@/assets/icons/godot.svg?raw';
+import awsIcon from '@/assets/icons/aws.svg?raw';
+import vuejsIcon from '@/assets/icons/vuejs.svg?raw';
 
 const props = defineProps<{
   skill: Skill;
 }>();
 
-const iconMap: Record<string, Component> = {
-  godot: PhGameController,
-  algorithm: PhLightbulb,
-  'clip-studio': PhPencilSimple,
-  aws: PhCloud,
-  vuejs: PhCode,
-  security: PhShieldCheck,
+// SVG icons (brand logos)
+const svgIcons: Record<string, string> = {
+  godot: godotIcon,
+  aws: awsIcon,
+  vuejs: vuejsIcon,
 };
 
-const iconComponent = iconMap[props.skill.id] || PhCode;
+// Phosphor icons (generic)
+const phosphorIcons: Record<string, typeof PhCode> = {
+  algorithm: PhLightbulb,
+  security: PhShieldCheck,
+  'clip-studio': PhPaperclip,
+};
+
+const hasSvgIcon = props.skill.id in svgIcons;
+const hasPhosphorIcon = props.skill.id in phosphorIcons;
+const phosphorIcon = phosphorIcons[props.skill.id] || PhCode;
 </script>
 
 <template>
   <div class="skill-icon">
     <div class="skill-icon__badge">
-      <component :is="iconComponent" class="skill-icon__icon" weight="duotone" />
+      <span v-if="hasSvgIcon" class="skill-icon__svg" v-html="svgIcons[skill.id]" />
+      <component v-else :is="phosphorIcon" class="skill-icon__icon" weight="duotone" />
     </div>
     <div class="skill-icon__info">
       <span class="skill-icon__name">{{ skill.name }}</span>
@@ -55,8 +60,10 @@ const iconComponent = iconMap[props.skill.id] || PhCode;
     transform: translateY(-2px);
     box-shadow: $shadow-md;
 
-    .skill-icon__icon {
+    .skill-icon__icon,
+    .skill-icon__svg :deep(svg) {
       color: $color-mem-pink;
+      fill: $color-mem-pink;
     }
   }
 
@@ -66,7 +73,7 @@ const iconComponent = iconMap[props.skill.id] || PhCode;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba($color-mem-pink, 0.1), rgba($color-electric-cyan, 0.1));
+    background: rgba($color-cyber-navy, 0.05);
     border-radius: $radius-md;
     flex-shrink: 0;
   }
@@ -74,8 +81,23 @@ const iconComponent = iconMap[props.skill.id] || PhCode;
   &__icon {
     width: 28px;
     height: 28px;
-    color: $color-electric-cyan;
+    color: #0099BB;
     transition: color $transition-fast;
+  }
+
+  &__svg {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :deep(svg) {
+      width: 100%;
+      height: 100%;
+      fill: #0099BB;
+      transition: fill $transition-fast;
+    }
   }
 
   &__info {

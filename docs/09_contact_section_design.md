@@ -169,7 +169,7 @@ mailto:contact@amano-amane.com
 ```typescript
 // src/data/contact.ts
 export const contactConfig = {
-  email: 'contact@amano-amane.com',
+  email: 'amano.amane44@gmail.com',
   emailSubject: 'お仕事のご相談',
   emailBodyTemplate: `【お名前】
 

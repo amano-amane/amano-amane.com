@@ -1,8 +1,14 @@
 <script setup lang="ts">
+import { PhXLogo, PhGithubLogo, PhLink } from '@phosphor-icons/vue';
 import { socialLinks } from '@/data/links';
 
 const currentYear = new Date().getFullYear();
 const activeLinks = socialLinks.filter(link => link.isActive);
+
+const iconComponents: Record<string, typeof PhLink> = {
+  twitter: PhXLogo,
+  github: PhGithubLogo,
+};
 </script>
 
 <template>
@@ -18,9 +24,11 @@ const activeLinks = socialLinks.filter(link => link.isActive);
           class="footer__social-link"
           :aria-label="link.name"
         >
-          <span class="footer__social-icon" :data-icon="link.icon">
-            {{ link.icon === 'twitter' ? '𝕏' : link.icon.charAt(0).toUpperCase() }}
-          </span>
+          <component
+            :is="iconComponents[link.icon] || PhLink"
+            class="footer__social-icon"
+            weight="bold"
+          />
         </a>
       </div>
       <p class="footer__copyright">
@@ -69,8 +77,8 @@ const activeLinks = socialLinks.filter(link => link.isActive);
     }
 
     &-icon {
-      font-size: 18px;
-      font-weight: $font-weight-bold;
+      width: 20px;
+      height: 20px;
     }
   }
 
