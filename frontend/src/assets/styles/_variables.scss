@@ -1,0 +1,126 @@
+// ===========================================
+// Color Palette - Kawaii Pop × Cyber
+// ===========================================
+
+// Primary Colors
+$color-mem-pink: #FF1493;
+$color-cyber-navy: #1A1B3A;
+$color-electric-cyan: #00D4FF;
+
+// Secondary Colors
+$color-soft-white: #FAFAFF;
+$color-neon-purple: #A855F7;
+$color-glitch-green: #4ADE80;
+$color-cyber-yellow: #FAFF00;
+$color-light-pink: #ff99d1;
+
+// Grayscale
+$color-dark: #1F2937;
+$color-medium: #6B7280;
+$color-light: #E5E7EB;
+
+// ===========================================
+// Typography
+// ===========================================
+
+$font-heading: 'M PLUS Rounded 1c', 'Zen Maru Gothic', sans-serif;
+$font-body: 'Noto Sans JP', sans-serif;
+$font-accent: 'Orbitron', sans-serif;
+$font-logo: 'RocknRoll One', sans-serif;
+
+// Font Sizes
+$font-size-h1: 48px;
+$font-size-h1-mobile: 32px;
+$font-size-h2: 32px;
+$font-size-h2-mobile: 24px;
+$font-size-h3: 24px;
+$font-size-h3-mobile: 20px;
+$font-size-body: 16px;
+$font-size-small: 14px;
+
+// Font Weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+// ===========================================
+// Spacing
+// ===========================================
+
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+$spacing-3xl: 64px;
+$spacing-4xl: 96px;
+
+// ===========================================
+// Layout
+// ===========================================
+
+$container-max-width: 1200px;
+$header-height: 64px;
+
+// ===========================================
+// Border Radius
+// ===========================================
+
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-full: 9999px;
+
+// ===========================================
+// Shadows
+// ===========================================
+
+$shadow-sm: 0 1px 2px rgba($color-cyber-navy, 0.05);
+$shadow-md: 0 4px 6px rgba($color-cyber-navy, 0.1);
+$shadow-lg: 0 10px 15px rgba($color-cyber-navy, 0.1);
+$shadow-glow-pink: 0 0 20px rgba($color-mem-pink, 0.4);
+$shadow-glow-cyan: 0 0 20px rgba($color-electric-cyan, 0.4);
+
+// ===========================================
+// Transitions
+// ===========================================
+
+$transition-fast: 150ms ease;
+$transition-base: 250ms ease;
+$transition-slow: 350ms ease;
+
+// ===========================================
+// Breakpoints
+// ===========================================
+
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+// Mixins for responsive design
+@mixin mobile {
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-md) and (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: $breakpoint-md) {
+    @content;
+  }
+}
