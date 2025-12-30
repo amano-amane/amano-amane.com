@@ -36,6 +36,7 @@ withDefaults(defineProps<{
   background: rgba($color-cyber-navy, 0.9);
   border: 1px solid rgba($color-electric-cyan, 0.3);
   overflow: hidden;
+  container-type: size;
 
   &--glow-pink {
     --glow-color: #{$color-mem-pink};
@@ -153,14 +154,14 @@ withDefaults(defineProps<{
 
 @keyframes scanline {
   0% {
-    top: 0;
+    transform: translateY(0);
     opacity: 0.5;
   }
   50% {
     opacity: 0.8;
   }
   100% {
-    top: 100%;
+    transform: translateY(100cqb);
     opacity: 0.5;
   }
 }

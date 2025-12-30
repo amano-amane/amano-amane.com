@@ -17,4 +17,20 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    target: 'esnext',
+    cssCodeSplit: true,
+    modulePreload: {
+      polyfill: false,
+    },
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/@phosphor-icons')) {
+            return 'vendor-icons';
+          }
+        },
+      },
+    },
+  },
 });

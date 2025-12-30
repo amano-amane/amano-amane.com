@@ -10,7 +10,7 @@ import { PhRocket } from '@phosphor-icons/vue';
       <div class="hero__grid" />
       <div class="hero__gradient" />
       <div class="hero__scanlines" />
-      <FloatingDecorations variant="hero" density="high" />
+      <FloatingDecorations variant="hero" density="medium" />
     </div>
 
     <div class="hero__container container">
@@ -501,11 +501,11 @@ import { PhRocket } from '@phosphor-icons/vue';
 @keyframes scroll-wheel {
   0%, 100% {
     opacity: 1;
-    top: 8px;
+    transform: translateY(0);
   }
   50% {
     opacity: 0.3;
-    top: 16px;
+    transform: translateY(8px);
   }
 }
 
