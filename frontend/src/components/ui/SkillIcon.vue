@@ -26,7 +26,6 @@ const phosphorIcons: Record<string, typeof PhCode> = {
 };
 
 const hasSvgIcon = props.skill.id in svgIcons;
-const hasPhosphorIcon = props.skill.id in phosphorIcons;
 const phosphorIcon = phosphorIcons[props.skill.id] || PhCode;
 </script>
 
