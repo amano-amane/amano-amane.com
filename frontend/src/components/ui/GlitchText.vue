@@ -18,7 +18,7 @@ let glitchTimeout: ReturnType<typeof setTimeout> | null = null;
 const triggerRandomGlitch = () => {
   if (props.glitchOnHover) return;
 
-  const delay = Math.random() * 4000 + 3000; // 3-7秒間隔
+  const delay = Math.random() * 2000 + 3000; // 3-5秒間隔
   glitchTimeout = setTimeout(() => {
     isGlitching.value = true;
     setTimeout(() => {

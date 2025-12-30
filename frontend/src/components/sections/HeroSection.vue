@@ -9,8 +9,7 @@ import { PhRocket } from '@phosphor-icons/vue';
     <div class="hero__background">
       <div class="hero__grid" />
       <div class="hero__gradient" />
-      <div class="hero__scanlines" />
-      <FloatingDecorations variant="hero" density="medium" />
+      <FloatingDecorations variant="hero" density="high" />
     </div>
 
     <div class="hero__container container">
@@ -98,36 +97,6 @@ import { PhRocket } from '@phosphor-icons/vue';
       radial-gradient(circle at 50% 100%, rgba($color-neon-purple, 0.1) 0%, transparent 50%);
   }
 
-  &__scanlines {
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba($color-cyber-navy, 0.3) 2px,
-      rgba($color-cyber-navy, 0.3) 4px
-    );
-    pointer-events: none;
-    opacity: 0.3;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 6px;
-      background: linear-gradient(
-        180deg,
-        transparent,
-        rgba($color-electric-cyan, 0.15),
-        transparent
-      );
-      animation: scanline-move 6s linear infinite;
-    }
-  }
-
   &__container {
     position: relative;
     z-index: 1;
@@ -197,6 +166,7 @@ import { PhRocket } from '@phosphor-icons/vue';
 
     &-line2 {
       display: block;
+      white-space: nowrap;
     }
 
     &-accent {
@@ -446,6 +416,10 @@ import { PhRocket } from '@phosphor-icons/vue';
     transition: color $transition-fast;
     z-index: 1;
 
+    @include mobile {
+      display: none;
+    }
+
     &:hover {
       color: $color-electric-cyan;
     }
@@ -460,10 +434,10 @@ import { PhRocket } from '@phosphor-icons/vue';
 
     &-wheel {
       position: absolute;
-      top: 8px;
+      top: 6px;
       left: 50%;
       width: 4px;
-      height: 8px;
+      height: 6px;
       background: currentColor;
       border-radius: 2px;
       transform: translateX(-50%);
@@ -501,27 +475,17 @@ import { PhRocket } from '@phosphor-icons/vue';
 @keyframes scroll-wheel {
   0%, 100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(-2px);
   }
   50% {
     opacity: 0.3;
-    transform: translateY(8px);
-  }
-}
-
-@keyframes scanline-move {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100vh);
+    transform: translateX(-50%) translateY(6px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero__avatar-ring,
-  .hero__scroll-wheel,
-  .hero__scanlines::before {
+  .hero__scroll-wheel {
     animation: none;
   }
 }

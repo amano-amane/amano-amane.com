@@ -11,7 +11,6 @@ const props = withDefaults(defineProps<{
 
 interface Decoration {
   id: number;
-  type: 'circle' | 'star' | 'dot' | 'ring' | 'sparkle';
   size: number;
   x: number;
   y: number;
@@ -20,26 +19,21 @@ interface Decoration {
   color: string;
 }
 
-const colors = ['#FF6B9D', '#00D4FF', '#A855F7', '#4ADE80'];
+const colors = ['#FAFAFF', '#A855F7', '#4ADE80', '#FAFF00', '#ff99d1'];
 
 const decorations = computed<Decoration[]>(() => {
   const count = props.density === 'low' ? 8 : props.density === 'high' ? 20 : 12;
   const items: Decoration[] = [];
 
-  const types: Decoration['type'][] = ['circle', 'star', 'dot', 'ring', 'sparkle'];
-
   for (let i = 0; i < count; i++) {
-    const typeIndex = i % types.length;
-    const colorIndex = i % colors.length;
     items.push({
       id: i,
-      type: types[typeIndex] as Decoration['type'],
       size: 8 + Math.random() * 24,
       x: Math.random() * 100,
       y: Math.random() * 100,
       delay: Math.random() * 5,
       duration: 4 + Math.random() * 4,
-      color: colors[colorIndex] as string,
+      color: colors[i % colors.length] as string,
     });
   }
   return items;
@@ -52,7 +46,6 @@ const decorations = computed<Decoration[]>(() => {
       v-for="deco in decorations"
       :key="deco.id"
       class="floating-decorations__item"
-      :class="`floating-decorations__item--${deco.type}`"
       :style="{
         '--size': `${deco.size}px`,
         '--x': `${deco.x}%`,
@@ -79,60 +72,21 @@ const decorations = computed<Decoration[]>(() => {
     top: var(--y);
     width: var(--size);
     height: var(--size);
-    animation: float var(--duration) ease-in-out infinite;
+    background: var(--color);
+    clip-path: polygon(
+      50% 0%,
+      55% 40%,
+      100% 50%,
+      55% 60%,
+      50% 100%,
+      45% 60%,
+      0% 50%,
+      45% 40%
+    );
+    animation: float var(--duration) ease-in-out infinite,
+               sparkle 2s ease-in-out infinite;
     animation-delay: var(--delay);
     opacity: 0.6;
-
-    &--circle {
-      background: var(--color);
-      border-radius: 50%;
-    }
-
-    &--dot {
-      background: var(--color);
-      border-radius: 50%;
-      width: calc(var(--size) * 0.5);
-      height: calc(var(--size) * 0.5);
-    }
-
-    &--ring {
-      border: 2px solid var(--color);
-      border-radius: 50%;
-      background: transparent;
-    }
-
-    &--star {
-      background: var(--color);
-      clip-path: polygon(
-        50% 0%,
-        61% 35%,
-        98% 35%,
-        68% 57%,
-        79% 91%,
-        50% 70%,
-        21% 91%,
-        32% 57%,
-        2% 35%,
-        39% 35%
-      );
-    }
-
-    &--sparkle {
-      background: var(--color);
-      clip-path: polygon(
-        50% 0%,
-        55% 40%,
-        100% 50%,
-        55% 60%,
-        50% 100%,
-        45% 60%,
-        0% 50%,
-        45% 40%
-      );
-      animation: float var(--duration) ease-in-out infinite,
-                 sparkle 2s ease-in-out infinite;
-      animation-delay: var(--delay);
-    }
   }
 
   &--hero {
