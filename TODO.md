@@ -14,10 +14,9 @@
 
 ## 今後の改善タスク
 
-- [ ] ContactSection 改善（テンプレート付き mailto + コピーボタン）
-- [ ] Gmail から独自ドメインで返信できるよう設定
-- [ ] X（Twitter）アカウント作成・リンク設定
-- [ ] GitHub リンク有効化（ポートフォリオ公開後）
+- [x] ContactSection 改善（mailto + コピーボタン + X DM リンク）
+- [x] X（Twitter）リンク設定（@amano_amane44）
+- [x] GitHub リンク有効化（github.com/amano-amane）
 - [ ] 作品情報の追加（works.ts）
 - [ ] OGP 画像作成・設置
 - [ ] Google Analytics 導入（任意）

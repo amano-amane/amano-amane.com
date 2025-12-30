@@ -12,13 +12,13 @@ Portfolio website for indie game creator "天野あまね" (Amano Amane).
 
 ## Tech Stack
 
-- **Frontend**: Vue.js 3 + TypeScript + Vite + SCSS
-- **Infrastructure**: AWS (S3 + CloudFront + Route 53 + ACM)
+- **Frontend**: Vue.js 3 + TypeScript + Vite + SCSS + vite-ssg (SSG)
+- **Infrastructure**: Cloudflare Workers + Cloudflare DNS/CDN/SSL
+- **Icons**: Phosphor Icons (Vue) + custom SVG for brand logos
 
 ## Development Commands
 
 ```bash
-# Navigate to frontend
 cd frontend
 
 # Install dependencies
@@ -27,55 +27,43 @@ npm install
 # Start development server
 npm run dev
 
-# Build for production
+# Build for production (includes TypeScript check)
 npm run build
 
-# Deploy to S3 (requires AWS CLI configured)
-aws s3 sync dist/ s3://amano-amane.com --delete
-
-# Invalidate CloudFront cache
-aws cloudfront create-invalidation --distribution-id [DISTRIBUTION_ID] --paths "/*"
+# Manual deploy to Cloudflare Workers
+npx wrangler deploy
 ```
 
-## Project Structure
+## Pre-Commit Workflow
 
+**IMPORTANT**: Always run `npm run build` before committing to catch TypeScript errors. The build includes `vue-tsc` which enforces strict type checking (`noUnusedLocals`, `noUnusedParameters`).
+
+```bash
+cd frontend && npm run build && cd .. && git add -A && git commit -m "message"
 ```
-mem-portfolio/
-├── docs/                    # Project documentation (Japanese)
-│   ├── 01_overview.md       # Project overview
-│   ├── 02_requirements.md   # Functional requirements
-│   ├── 03_design.md         # Design guidelines (colors, typography)
-│   ├── 04_content.md        # Content plan
-│   ├── 05_technical_spec.md # Technical specifications
-│   ├── 06_aws_setup.md      # AWS setup instructions
-│   └── 07_development_plan.md
-└── frontend/                # Vue.js application
-    └── src/
-        ├── components/
-        │   ├── layout/      # AppHeader, AppFooter
-        │   ├── sections/    # HeroSection, AboutSection, etc.
-        │   └── ui/          # WorkCard, SkillIcon, LinkButton
-        ├── data/            # Static data (works.ts, skills.ts, links.ts)
-        ├── types/           # TypeScript type definitions
-        └── assets/styles/   # SCSS (_variables.scss, global.scss)
-```
+
+## Deployment
+
+- **Automatic**: Push to `main` branch triggers Cloudflare Workers auto-deploy
+- **Manual**: `cd frontend && npx wrangler deploy`
 
 ## Architecture
 
-- Single-page application with section-based navigation
-- No Vue Router needed (anchor links only)
+- Single-page application with section-based navigation (no Vue Router)
 - Static data stored in TypeScript files under `src/data/`
-- AWS S3 for static hosting, CloudFront for CDN/SSL
+- SSG (Static Site Generation) via vite-ssg for performance
+- Font preload generation script runs automatically on build
 
 ## Design System
 
-Primary colors (defined in `docs/03_design.md`):
-- Mem Pink: `#FF6B9D` (main accent)
+Primary colors (defined in `frontend/src/assets/styles/_variables.scss`):
+- Mem Pink: `#FF1493` (main accent)
 - Cyber Navy: `#1A1B3A` (base/text)
 - Electric Cyan: `#00D4FF` (highlight/links)
 
 ## Important Notes
 
-- All documentation is in Japanese
-- Code will be published publicly on GitHub
-- ACM certificates must be created in `us-east-1` for CloudFront
+- All documentation in `docs/` is in Japanese
+- TypeScript strict mode is enabled - unused variables cause build failures
+- `docs/06_aws_setup.md` is deprecated (migrated to Cloudflare)
+- Current Cloudflare setup documented in `docs/08_cloudflare_migration.md`
