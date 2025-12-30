@@ -280,18 +280,57 @@ ACM（SSL証明書）→ CloudFront
 
 ## デプロイ手順
 
-### AWS CLI セットアップ
+### IAM Identity Center 設定（初回のみ）
+
+1. AWS コンソール → IAM Identity Center
+2. 左メニュー「許可セット」→「許可セットを作成」
+3. 「カスタム許可セット」を選択 →「次へ」
+4. 許可セット名: `PortfolioDeployAccess`
+5. 「インラインポリシー」に以下を貼り付け:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "S3DeployAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:DeleteObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::amano-amane.com",
+        "arn:aws:s3:::amano-amane.com/*"
+      ]
+    },
+    {
+      "Sid": "CloudFrontInvalidation",
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetInvalidation",
+        "cloudfront:ListInvalidations"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+6. 「次へ」→「作成」
+7. 左メニュー「AWSアカウント」→ 対象アカウントを選択
+8. 「ユーザーまたはグループを割り当て」
+9. 自分のユーザーを選択 →「次へ」
+10. 作成した `PortfolioDeployAccess` を選択 →「送信」
+
+### AWS CLI ログイン
 
 ```bash
-# AWS CLI インストール確認
-aws --version
-
-# 認証情報設定
-aws configure
-# Access Key ID: [IAM で作成]
-# Secret Access Key: [IAM で作成]
-# Default region: ap-northeast-1
-# Default output format: json
+# ログイン（ブラウザが開く）
+aws login
 ```
 
 ### デプロイコマンド

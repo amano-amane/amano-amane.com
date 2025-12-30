@@ -116,7 +116,7 @@ amane-portfolio/
 | 設定項目 | 値 |
 |----------|-----|
 | オリジン | S3バケット |
-| 代替ドメイン名 | amano-amane.com, www.amano-amane.com |
+| 代替ドメイン名 | amano-amane.com |
 | SSL証明書 | ACM（us-east-1） |
 | デフォルトルートオブジェクト | index.html |
 | 価格クラス | PriceClass_100 |
@@ -126,7 +126,6 @@ amane-portfolio/
 | レコード | タイプ | 値 |
 |----------|--------|-----|
 | amano-amane.com | A | CloudFront（Alias） |
-| www.amano-amane.com | A | CloudFront（Alias） |
 
 ### ACM（SSL証明書）
 
