@@ -9,23 +9,31 @@
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    CloudFront (CDN)                         │
-│                  ・SSL終端 (ACM証明書)                       │
+│                 Cloudflare (CDN + SSL)                      │
+│                  ・DDoS保護                                 │
+│                  ・SSL/TLS終端                              │
 │                  ・キャッシュ配信                            │
-│                  ・カスタムドメイン                          │
+│                  ・DNS管理                                  │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      S3 Bucket                              │
+│               Cloudflare Workers + Assets                   │
 │                  ・静的ファイルホスティング                  │
 │                  ・Vue.js ビルド成果物                       │
+│                  ・GitHub連携で自動デプロイ                  │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│               Cloudflare Email Routing                      │
+│                  ・contact@amano-amane.com                  │
+│                  ・Gmail へ転送                              │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │                     Route 53                                │
-│                  ・ドメイン管理                              │
-│                  ・DNS設定                                  │
+│                  ・ドメイン登録のみ                          │
+│                  （DNS は Cloudflare で管理）                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -42,14 +50,16 @@
 | 言語 | TypeScript | 型安全性 |
 | スタイリング | SCSS | 変数・ネスト活用 |
 
-### インフラ（AWS）
+### インフラ（Cloudflare）
 
 | 項目 | サービス | 用途 |
 |------|----------|------|
-| ホスティング | S3 | 静的ファイル配信 |
-| CDN | CloudFront | キャッシュ、SSL終端 |
-| DNS | Route 53 | ドメイン管理 |
-| SSL証明書 | ACM | HTTPS化 |
+| ホスティング | Cloudflare Workers | 静的ファイル配信 |
+| CDN | Cloudflare | キャッシュ、DDoS保護 |
+| DNS | Cloudflare | DNS管理 |
+| SSL証明書 | Cloudflare | HTTPS化（自動） |
+| メール | Email Routing | 転送（Gmail） |
+| ドメイン登録 | Route 53 | ドメイン所有 |
 
 ---
 
@@ -100,40 +110,31 @@ amane-portfolio/
 
 ---
 
-## AWS構成詳細
+## Cloudflare 構成詳細
 
-### S3バケット
-
-| 設定項目 | 値 |
-|----------|-----|
-| バケット名 | amano-amane.com |
-| リージョン | ap-northeast-1 |
-| 静的ウェブホスティング | 有効 |
-| パブリックアクセス | CloudFront経由のみ |
-
-### CloudFront
+### Workers
 
 | 設定項目 | 値 |
 |----------|-----|
-| オリジン | S3バケット |
-| 代替ドメイン名 | amano-amane.com |
-| SSL証明書 | ACM（us-east-1） |
-| デフォルトルートオブジェクト | index.html |
-| 価格クラス | PriceClass_100 |
+| プロジェクト名 | amano-amane |
+| 設定ファイル | `frontend/wrangler.jsonc` |
+| Assets ディレクトリ | `./dist` |
+| 自動デプロイ | GitHub main ブランチ連携 |
 
-### Route 53
+### DNS
 
 | レコード | タイプ | 値 |
 |----------|--------|-----|
-| amano-amane.com | A | CloudFront（Alias） |
+| amano-amane.com | Workers カスタムドメイン | - |
+| www.amano-amane.com | CNAME → リダイレクト | amano-amane.com |
 
-### ACM（SSL証明書）
+### Email Routing
 
 | 設定項目 | 値 |
 |----------|-----|
-| リージョン | us-east-1 |
-| ドメイン | amano-amane.com, *.amano-amane.com |
-| 検証方法 | DNS検証 |
+| カスタムアドレス | contact@amano-amane.com |
+| 転送先 | Gmail |
+| DMARC | 有効 |
 
 ---
 
@@ -142,22 +143,20 @@ amane-portfolio/
 ### パフォーマンス
 - Lighthouse スコア: 90以上
 - 画像はWebP形式推奨
+- フォントはセルフホスティング（サブセット化）
 
 ### セキュリティ
-- HTTPS必須
-- S3はCloudFront経由のみ
+- HTTPS必須（Cloudflare 自動）
+- DDoS保護（Cloudflare 標準）
+- HSTS 有効
 
 ### コスト（月額目安）
 
 | サービス | 概算 |
 |----------|------|
-| Route 53 | $0.50 |
-| S3 | $0.10以下 |
-| CloudFront | 無料枠内 |
-| ACM | 無料 |
-| **合計** | **$1〜2/月** |
-
-※ 100USDクレジットあり
+| Cloudflare（Free プラン） | $0 |
+| Route 53（ドメイン登録のみ） | 年額のみ |
+| **合計** | **$0/月** |
 
 ---
 
@@ -171,6 +170,11 @@ npm run dev
 # ビルド
 npm run build
 
-# デプロイ
-aws s3 sync dist/ s3://amano-amane.com --delete
+# デプロイ（自動）
+git push origin main
+# → Cloudflare Workers が自動でビルド・デプロイ
+
+# 手動デプロイ（必要時）
+cd frontend
+npx wrangler deploy
 ```

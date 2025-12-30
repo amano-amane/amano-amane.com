@@ -298,10 +298,11 @@ Cloudflare のネームサーバーが返ってくれば完了。
 |------|-----|
 | Project name | `amano-amane` |
 | Production branch | `main` |
-| Framework preset | Vue |
 | Build command | `cd frontend && npm install && npm run build` |
-| Build output directory | `frontend/dist` |
+| Deploy command | `cd frontend && npx wrangler deploy` |
 | Root directory | `/`（空欄のまま） |
+
+> **Note**: `frontend/wrangler.jsonc` で静的アセットの出力先（`./dist`）を指定済み
 
 ### 6-5. 環境変数（必要な場合）
 
@@ -395,7 +396,7 @@ git add .
 git commit -m "Update: 〇〇を修正"
 git push origin main
 
-# → Cloudflare Pages が自動検知してビルド・デプロイ
+# → Cloudflare Workers が自動検知してビルド・デプロイ
 ```
 
 ### プレビューデプロイ
@@ -407,7 +408,7 @@ git checkout -b feature/new-section
 # 作業...
 git push origin feature/new-section
 
-# → https://xxxxx.amano-amane.pages.dev でプレビュー
+# → https://xxxxx.amano-amane.workers.dev でプレビュー
 ```
 
 ### 手動デプロイ（必要時）
