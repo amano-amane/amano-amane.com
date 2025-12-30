@@ -24,7 +24,7 @@ import { PhRocket } from '@phosphor-icons/vue';
 
         <p class="hero__name">
           <span class="hero__name-jp">天野あまね</span>
-          <span class="hero__name-en">Amano Amane — Playful Creator</span>
+          <span class="hero__name-en">Amano Amane</span>
         </p>
 
         <div class="hero__cta">
@@ -43,10 +43,7 @@ import { PhRocket } from '@phosphor-icons/vue';
           <div class="hero__avatar">
             <PhRocket class="hero__avatar-icon" weight="fill" />
           </div>
-          <div class="hero__avatar-particles">
-            <span v-for="i in 8" :key="i" class="hero__avatar-particle" />
-          </div>
-        </div>
+                  </div>
       </div>
     </div>
 
@@ -434,35 +431,7 @@ import { PhRocket } from '@phosphor-icons/vue';
     }
   }
 
-  &__avatar-particles {
-    position: absolute;
-    inset: 0;
-    animation: rotate 30s linear infinite;
-  }
-
-  &__avatar-particle {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: $color-electric-cyan;
-    border-radius: 50%;
-    box-shadow: 0 0 10px $color-electric-cyan;
-
-    @for $i from 1 through 8 {
-      &:nth-child(#{$i}) {
-        top: 50%;
-        left: 50%;
-        transform: rotate(#{$i * 45}deg) translateX(160px) translateY(-50%);
-        animation: particle-pulse 2s ease-in-out infinite;
-        animation-delay: #{$i * 0.2}s;
-
-        @include mobile {
-          transform: rotate(#{$i * 45}deg) translateX(120px) translateY(-50%);
-        }
-      }
-    }
-  }
-
+  
   &__scroll {
     position: absolute;
     bottom: $spacing-xl;
@@ -528,16 +497,6 @@ import { PhRocket } from '@phosphor-icons/vue';
   }
 }
 
-@keyframes particle-pulse {
-  0%, 100% {
-    opacity: 0.5;
-    transform: rotate(var(--rotation)) translateX(160px) translateY(-50%) scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: rotate(var(--rotation)) translateX(160px) translateY(-50%) scale(1.5);
-  }
-}
 
 @keyframes scroll-wheel {
   0%, 100% {
@@ -556,6 +515,14 @@ import { PhRocket } from '@phosphor-icons/vue';
   }
   100% {
     transform: translateY(100vh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__avatar-ring,
+  .hero__scroll-wheel,
+  .hero__scanlines::before {
+    animation: none;
   }
 }
 </style>

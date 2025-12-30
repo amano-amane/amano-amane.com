@@ -29,7 +29,7 @@ import { PhPaintBrush, PhSparkle, PhFlag } from '@phosphor-icons/vue';
             <h3 class="about__name">天野あまね</h3>
             <p class="about__role">
               <PhSparkle class="about__role-icon" weight="fill" />
-              インディーゲームクリエイター
+              クリエイター
             </p>
           </div>
 
@@ -47,7 +47,7 @@ import { PhPaintBrush, PhSparkle, PhFlag } from '@phosphor-icons/vue';
               <span class="about__vision-label">Vision</span>
             </div>
             <p class="about__vision-text">
-              個人でゲームを創って生きていく
+              遊び心を世界に感染させる！
             </p>
           </div>
         </div>

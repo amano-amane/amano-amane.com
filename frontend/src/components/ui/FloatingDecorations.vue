@@ -86,7 +86,6 @@ const decorations = computed<Decoration[]>(() => {
     &--circle {
       background: var(--color);
       border-radius: 50%;
-      filter: blur(1px);
     }
 
     &--dot {
@@ -166,6 +165,12 @@ const decorations = computed<Decoration[]>(() => {
   50% {
     opacity: 1;
     transform: scale(1.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-decorations__item {
+    animation: none;
   }
 }
 </style>
