@@ -1,10 +1,25 @@
-import { defineConfig } from 'vite';
+import type { UserConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { fileURLToPath, URL } from 'node:url';
 
+// Extend Vite config with vite-ssg options
+interface ViteSSGConfig extends UserConfig {
+  ssgOptions?: {
+    beastiesOptions?: {
+      preload?: 'body' | 'media' | 'swap' | 'js' | 'js-lazy';
+    };
+  };
+}
+
 // https://vite.dev/config/
-export default defineConfig({
+const config: ViteSSGConfig = {
   plugins: [vue()],
+  ssgOptions: {
+    beastiesOptions: {
+      // Non-blocking CSS loading: preload then swap to stylesheet
+      preload: 'swap',
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -33,4 +48,6 @@ export default defineConfig({
       },
     },
   },
-});
+};
+
+export default config;
